@@ -1,3 +1,39 @@
+//new code, using digital pin for non-zero fluctuation vcc 
+
+
+#define out 2
+#define in1 A0
+#define in2 A1
+#define in3 A2
+
+int t = 25;
+int values[8] = {3, 7, 6, 1, 0, 4, 5, 1};
+
+void setup() {
+  pinMode(out, OUTPUT);  
+  pinMode(in1, INPUT);
+  pinMode(in2, INPUT);  
+  pinMode(in3, INPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite (out, HIGH);
+  
+  int led1 = analogRead(in1) > t);
+  int led2 = analogRead(in2) > t);
+  int led3 = analogRead(in3) > t);
+
+  int val= 1*led1+2*led2+4*led3;
+  int position= values[val];
+
+  Serial.print(position);
+}
+
+
+//old code below, using 5v direct vcc input for IR transmitters
+
 #define led1 A0
 #define led2 A1
 #define led3 A2
