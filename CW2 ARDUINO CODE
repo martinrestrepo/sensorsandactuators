@@ -1,0 +1,63 @@
+#define led1 A0
+#define led2 A1
+#define led3 A2
+
+class MedianFilter {
+public:
+  MedianFilter() : idx(0), arr{} {}
+
+  void add_value(int a) {
+    arr[idx] = a;
+    idx = (idx + 1) % 5;
+  }
+
+  int value() {
+    int temp;
+    for (int i = 0; i < 5; i++) {
+      for (int j = i + 1; j < 5; j++) {
+        if (arr[i] > arr[j]) {
+          temp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = temp;
+        }
+      }
+    }
+    return arr[3];
+  }
+
+private:
+  int idx = 0;
+  int arr[7];
+};
+
+int leds[3] = {led1, led2, led3};
+MedianFilter leds_filtered[3];
+int values[8] = {3, 7, 6, 1, 0, 4, 5, 1};
+
+void setup() {
+  pinMode(led1, INPUT);
+  pinMode(led2, INPUT);  
+  pinMode(led3, INPUT);
+
+
+  Serial.begin(9600);
+
+}
+
+void loop() {
+ 
+
+  const int THR = 5;
+  for(int i = 0; i < 3; i++)
+    leds_filtered[i].add_value(analogRead(leds[i]));
+  int a = leds_filtered[2].value() > THR, b = leds_filtered[1].value() >THR, c = leds_filtered[0].value() > THR;
+
+
+int readval= 1*a+2*b+4*c;
+int position= values[readval];
+
+Serial.println(readval);
+
+delay(10);
+
+}
